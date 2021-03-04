@@ -1,5 +1,6 @@
 const MongoClient = require('mongodb');
 const assert = require('assert');
+const dboper = require('./operations');
 
 const url = 'mongodb://localhost:27017/';
 const dbname = 'conFusion';
@@ -10,24 +11,28 @@ MongoClient.connect(url, (err, client) => {
     console.log('Connected correctly to the server');
 
     const db = client.db(dbname);
-    const collection = db.collection('dishes');
 
-    collection.insertOne({ "name": "Sweets", "description": "tasty" }, (error, result) => {
-        assert.strictEqual(error, null);
+    dboper.insertDocument(db, { "name": "Fuchka", "description": "Yummy" }, 'dishes', (result) => {
+        console.log(`Insert Document:\n ${JSON.stringify(result.ops)}`);
 
-        console.log('After Insert:\n');
-        console.log(result.ops);
+        dboper.findDocuments(db, 'dishes', (docs) => {
+            console.log(`\nFound Documents:\n ${JSON.stringify(docs)}`);
 
-        collection.find({}).toArray((er, docs) => {
-            assert.strictEqual(er, null);
+            dboper.updateDocument(db, { "name": "Fuchka" }, { "description": "Too Yummy" }, 'dishes', (result) => {
+                console.log(`Updated Document:\n ${JSON.stringify(result.result)}`);
 
-            console.log('Found:\n');
-            console.log(docs);
+                dboper.findDocuments(db, 'dishes', (docs) => {
+                    console.log(`\nFound Updated Documents:\n ${JSON.stringify(docs)}`);
 
-            db.dropCollection('dishes', (e, r) => {
-                assert.strictEqual(e, null);
+                    dboper.removeDocument(db, { "name": "Fuchka" }, "dishes", (result) => {
+                        console.log(`Removed Document:\n ${JSON.stringify(result.result)}`);
 
-                client.close();
+                        db.dropCollection('dishes', (result) => {
+                            console.log(`\nDropped Collection:\n ${JSON.stringify(result)}`);
+                            client.close();
+                        });
+                    });
+                });
             });
         });
     });
