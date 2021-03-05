@@ -38,6 +38,8 @@ connect.then((db) => {
             return Dishes.deleteOne({});
         })
         .then(() => {
+            console.log('\nDishes deleted from the DB!');
+
             return mongoose.connection.close();
         })
         .catch((err) => {
