@@ -5,35 +5,41 @@ const dboper = require('./operations');
 const url = 'mongodb://localhost:27017/';
 const dbname = 'conFusion';
 
-MongoClient.connect(url, (err, client) => {
-    assert.strictEqual(err, null);
-
+MongoClient.connect(url).then((client) => {
     console.log('Connected correctly to the server');
 
     const db = client.db(dbname);
 
-    dboper.insertDocument(db, { "name": "Fuchka", "description": "Yummy" }, 'dishes', (result) => {
-        console.log(`Insert Document:\n ${JSON.stringify(result.ops)}`);
+    dboper.insertDocument(db, { "name": "Fuchka", "description": "Yummy" }, 'dishes')
+        .then((result) => {
+            console.log(`\nInsert Document:\n ${JSON.stringify(result.ops)}`);
 
-        dboper.findDocuments(db, 'dishes', (docs) => {
+            return dboper.findDocuments(db, 'dishes')
+        })
+        .then((docs) => {
             console.log(`\nFound Documents:\n ${JSON.stringify(docs)}`);
 
-            dboper.updateDocument(db, { "name": "Fuchka" }, { "description": "Too Yummy" }, 'dishes', (result) => {
-                console.log(`Updated Document:\n ${JSON.stringify(result.result)}`);
+            return dboper.updateDocument(db, { "name": "Fuchka" }, { "description": "Too Yummy" }, 'dishes')
+        })
+        .then((result) => {
+            console.log(`\mUpdated Document:\n ${JSON.stringify(result.result)}`);
 
-                dboper.findDocuments(db, 'dishes', (docs) => {
-                    console.log(`\nFound Updated Documents:\n ${JSON.stringify(docs)}`);
+            return dboper.findDocuments(db, 'dishes')
+        })
+        .then((docs) => {
+            console.log(`\nFound Updated Documents:\n ${JSON.stringify(docs)}`);
 
-                    dboper.removeDocument(db, { "name": "Fuchka" }, "dishes", (result) => {
-                        console.log(`Removed Document:\n ${JSON.stringify(result.result)}`);
+            return dboper.removeDocument(db, { "name": "Fuchka" }, "dishes")
+        })
+        .then((result) => {
+            console.log(`\nRemoved Document:\n ${JSON.stringify(result.result)}`);
 
-                        db.dropCollection('dishes', (result) => {
-                            console.log(`\nDropped Collection:\n ${JSON.stringify(result)}`);
-                            client.close();
-                        });
-                    });
-                });
-            });
-        });
-    });
-});
+            return db.dropCollection('dishes')
+        })
+        .then((result) => {
+            console.log(`\nDropped Collection:\n ${JSON.stringify(result)}`);
+            client.close();
+        })
+        .catch((err) => console.log(err));
+})
+    .catch((err) => console.log(err));
