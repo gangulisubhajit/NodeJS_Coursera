@@ -15,17 +15,32 @@ connect.then((db) => {
         .then((dish) => {
             console.log('\nInserted Data:\n' + dish);
 
-            return Dishes.find({}).exec();
+            return Dishes.findByIdAndUpdate(dish._id, {
+                $set: { description: 'Very yummy' }
+            }, {
+                new: true
+            }).exec();
         })
-        .then((dishes) => {
-            console.log('Dishes:\n' + dishes);
+        .then((dish) => {
+            console.log('\nUpdated Dish:\n' + dish);
 
-            return Dishes.remove({});
+            dish.comments.push({
+                rating: 5,
+                comment: 'Awesome food!',
+                author: 'Leonardo di Carpaccio'
+            });
+
+            return dish.save();
+        })
+        .then((dish) => {
+            console.log('\nDish with comments:\n' + dish);
+
+            return Dishes.deleteOne({});
         })
         .then(() => {
             return mongoose.connection.close();
         })
         .catch((err) => {
-            console.log(edrr);
+            console.log(err);
         })
 });
