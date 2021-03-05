@@ -1,0 +1,17 @@
+{
+  "name": "assignment_1",
+  "version": "1.0.0",
+  "description": "First assignment of node js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index"
+  },
+  "author": "Subhajit Ganguli",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0"
+  }
+}
