@@ -1,0 +1,50 @@
+y
+cd..
+git status
+git add .
+git commit -m "express rest api with mongoose"
+git push -u origin main
+cd conFusionServer
+npm start
+y
+npm start
+y
+npm start
+y
+cls
+npm start
+y
+npm start
+y
+git status
+git add .
+git status
+git commit -m "assignment 2"
+git push -u origin main
+cd..
+git fetch origin
+git checkout main
+git pull
+git status
+git add .
+git commit -m "Assignment-2"
+git push -u origin main
+cd conFusionServer
+npm start
+y
+npm start
+y
+git stash
+cd..
+git stash
+git status
+cd conFusionServer
+npm start
+y
+cd..
+git status
+git add .
+git commit -m "basic authentication"
+git push -u origin main
+doskey
+doskey /history > commands.log
